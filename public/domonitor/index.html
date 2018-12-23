@@ -1,0 +1,78 @@
+<html>
+<head>
+    <style>
+        .div{
+            border: 2px solid;
+            position: absolute;
+        }
+        .div-pos{
+             position: absolute;
+         }
+    </style>
+</head>
+<body>
+<script>
+
+</script>
+<h1> DOM Monitor</h1>
+<p> collect DOM changes abd send to the server</p>
+<script>
+  function getRandomColor() {
+    var letters = '0123456789ABCDEF';
+    var color = '#';
+    for (var i = 0; i < 6; i++) {
+      color += letters[Math.floor(Math.random() * 16)];
+    }
+    return color;
+  }
+  (function(){
+
+    function addDom(){
+      var div = document.createElement('div');
+      var sub  = document.createElement('div');
+      div.setAttribute('class', 'div div-pos');
+      sub.setAttribute('class', 'div');
+      div.style.left = Math.floor(Math.random() *1000)+'px';
+      div.style.top = Math.floor(Math.random() *1000)+'px'
+      var width = Math.floor(Math.random() *300)
+      div.style.width=width+'px'
+      var height = Math.floor(Math.random() *300)
+      div.style.height=height+'px'
+      div.style.borderColor = getRandomColor()
+      sub.style.height=(height-20)+'px'
+      sub.style.width=(width-10)+'px'
+      sub.style.borderColor = getRandomColor()
+      div.appendChild(sub)
+      document.body.appendChild(div);
+    }
+    setInterval(addDom,1000)
+  }())
+
+  var changes = []
+  var observer = new MutationObserver(function(mutations){
+    var type = mutations[0].addedNodes[0].localName
+    if(type){
+      changes.push({type:type, ts: Date.now()})
+    }
+  });
+
+  observer.observe(document.documentElement, {
+    childList: true,
+    subtree: true
+  });
+
+  function sendToServer(){
+    if(changes.length === 0){
+      return;
+    }
+    var xhr = new XMLHttpRequest();
+    xhr.open('POST', '/get-report');
+    xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+    xhr.send(JSON.stringify(changes))
+    changes = []
+  }
+  setInterval(sendToServer,10000)
+</script>
+
+</body>
+</html>

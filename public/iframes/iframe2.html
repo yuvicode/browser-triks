@@ -1,0 +1,11 @@
+<html>
+<script>
+  (function () {
+    window.onhashchange = function () {
+      var sendToMain = window.location.hash.substring(1);
+      // message to main (on the same domain)
+      parent.parent.messageFromXDomain(sendToMain)
+  }
+  }())
+</script>
+</html>

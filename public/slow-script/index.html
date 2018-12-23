@@ -1,0 +1,40 @@
+<html>
+     <head>
+
+     </head>
+    <body>
+    <script>
+
+    </script>
+    <h1> Slow scrpit loading (please wait)</h1>
+    <p>
+        After 3 seconds abort and relaod the HTML async
+    </p>
+    <h2 id="loaded" style="color: red; font-style: italic"></h2>
+    <script>
+      function scripLoaded(){
+        var msg = document.getElementById("loaded");
+        msg.innerText = 'Slow script finally loaded'
+      }
+      (function(){
+         setTimeout(function(){
+           if(document.getElementById('lastElement')){
+             return;
+           }
+           var xhr = new XMLHttpRequest();
+           xhr.onload = function (res) {
+             var str = res.currentTarget.response
+             str = str.replace(new RegExp('<script src','g'), '<script src async')
+             document.write(str)
+           }
+           xhr.open('GET', 'index.html');
+           xhr.send()
+          },3000)
+      }())
+    </script>
+    <script src="/server/slow-script.js" ></script>
+    <h5 id="lastElement">
+        If you see this message, before script is loaded, then we have some kind of a solution.
+    </h5>
+    </body>
+</html>

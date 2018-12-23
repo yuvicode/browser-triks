@@ -1,0 +1,37 @@
+<html>
+<body>
+    <H1> Secure Cross-Domain Browser Communication</H1>
+    <p>
+        To perform the test you need to change the ip for iframe2 as defined in iframe1.html
+        You can't use localhost for the test and real IP is required in Chrome.
+    </p>
+    <a target="_blank" href="https://msdn.microsoft.com/en-us/library/bb735305.aspx"> Technical document reference</a>
+    <H1> Main window</H1>
+    <div>
+        <button>Send message to iframe</button>
+        <div>
+            Message back : <span id="msg"></span>
+        </div>
+    </div>
+    <script>
+      var msg = document.getElementById("msg");
+        function messageFromXDomain(msg) {
+          msg.innerHTML = msg
+        }
+
+      document.addEventListener("DOMContentLoaded", function(event) {
+        (function () {
+          var counter = 1;
+          var iframe = document.getElementsByTagName("iframe")[0];
+          var button = document.getElementsByTagName("button")[0];
+          button.addEventListener("click",function () {
+            iframe.src = "http://127.0.0.1:3000/iframes/iframe1.html#message:"+counter;
+            counter++;
+          })
+        }())
+      })
+    </script>
+
+    <iframe height="500px" width="500px" src="http://127.0.0.1:3000/iframes/iframe1.html" style="border: 0px; margin-top: 100px"></iframe>
+</body>
+</html>

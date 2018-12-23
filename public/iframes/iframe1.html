@@ -1,0 +1,22 @@
+<html>
+<body>
+<H3> Im iframe from other domain (127.0.0.1)</H3>
+<div>
+    message from the main window <span id="mainMsg"> </span>
+</div>
+<iframe height="300px" width="300px" src="http://10.100.102.13:3000/iframes/iframe2.html" style="border: 0px; margin-top: 100px"> </iframe>
+
+</body>
+
+<script>
+    (function () {
+      var msg = document.getElementById("mainMsg");
+      var iframe = document.getElementsByTagName("iframe")[0];
+      var counder = 1;
+      window.onhashchange = function () {
+        msg.innerHTML = window.location.hash.substring(1);
+       iframe.src = "http://10.100.102.13:3000/iframes/iframe2.html#"+'got message' + counder;
+      }
+    }())
+</script>
+</html>
